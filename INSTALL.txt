@@ -1,0 +1,83 @@
+Photocapture is set of scripts to automatically make photos and movies out of the photos.
+For more info look into README.txt
+
+Located on launchpad at
+https://code.launchpad.net/~szczym/tutturu/photocapture
+
+Working example at
+http://fabryka.obin.org/tutturu/
+
+Installation of “photocapture”:
+In below example is covered installation on remote locations with central server and storage.
+It might be easily tuned for ordinary single linux desktop installation.
+
+
+1.What you need:
+- Digital photo camera with power adapter capable of being controlled from linux: most canon
+cameras can do the job.
+- One PC for server and/or one for remote capturing. You don't need new machines for it,
+5 years old pc is ok, difference is only in time it takes to generate a movie.
+P4 with 1GB of ram is able to compress photos from 2 cameras every minute, generate movie every
+30 minutes and send website to thousands web visitors every day.
+
+2.Install “Ubuntu server 8.04” on the server and clients.
+Download: http://releases.ubuntu.com/hardy/
+Documentation: https://help.ubuntu.com/8.04/serverguide/C/index.html
+
+3.On every remote client :
+- connect camera
+- install gphoto2: sudo apt-get install gphoto2
+- test camera capability by taking test photo from linux command line.
+
+gphoto2 --capture-image
+
+More on gphoto2 subject is here:
+http://www.gphoto.org/doc/manual/using-gphoto2.html
+http://www.linux.com/news/software/applications/126189-schedule-photo-taking-with-gphoto-and-cron
+
+If you are not able to make photos with gphoto2, tray the alternative package
+called “capture” from: http://capture.sourceforge.net/.
+If you have problems with compiling it, you may tray  with package from
+http://fabryka.obin.org/tutturu/sites/default/files/Capture-bin.tar.gz  - its
+compiled by Przemysław Kalicki <p.kalicki@gmail.com>.  
+Some times you might experience strange problems with camera and reset feature will not work.
+Use a script called /close-camera.sh to close it every given time.
+
+4. Download and extract scripts into a home dir of default user. You
+should have ~/photocapture/make-photo-cron.sh
+
+5. Tune scripts for your needs: dirs and time patterns.
+- change all references to /home/user/ to your paths.
+- ~/dump is directory where photos are coming in from camera and remote machine.
+- ~/image-input/ is directory where images are coped after processing
+
+6. Generate ssh key pair and add it to master server.
+https://help.ubuntu.com/community/SSH/OpenSSH/Keys
+Make a test run and check if file appears on server. When all is working fine, make logfile:
+touch /home/user/photocapture/make-photo-cron.log
+- Set the crontab, one below will run every one minute from 6 to 21:
+*/1 6-21 * * * /home/user/photocapture/make-photo-cron.sh > /home/user/photocapture/make-photo-cron.log 2>&1
+
+By now your clinet should make photos and send them to central server.
+
+7. On server side: if photos are coming, time to make a show out of it:
+- Get the photocapture scripts and unpack it to home dir.
+- Install medibuntu repository http://www.medibuntu.org/ - its for proper ffmpeg
+- Install apache webserver, mencoder (for movies out of photos), ffmpeg (for flv), ffmpeg2theora (for ogv movies) and image magic for photo conversion (convert command):
+sudo apt-get install ffmpeg mencoder ffmpeg2theora imagemagic apache2
+- tune scripts with your dirs and settings.
+If all is working fine, put scripts into cron and watch effects in http://your-web-server/webcam/
+
+In case of problems please use lauchpad for support:
+https://answers.launchpad.net/tutturu
+
+Report bugs into lauchpad:
+https://bugs.launchpad.net/tutturu
+
+
+
+
+
+
+
+
